@@ -1,0 +1,28 @@
+services:
+  psgr:
+    image: postgres:18-alpine
+    container_name: psgr
+    volumes:
+      - psgr-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  api:
+    build: ./incidents
+    image: api
+    container_name: api
+    restart: always
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./incidents:/app/www/incidents
+    ports:
+        - "8000:8000"
+    depends_on:
+      - psgr
+
+volumes:
+  psgr-data:
