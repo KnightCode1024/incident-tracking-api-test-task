@@ -1,6 +1,14 @@
 # incident-tracking-api-test-task
 Тестовое задание.  Задача: разработать API-сервис для учёта инцидентов.
 
+
+## Технологии
+ - `Python`
+ - `Postgres`
+ - `Django` `DRF`
+ - `Docker`
+ - `Git`
+
 ## Запуск
 
 1) Создайте `.env` на основе `.env.example`
@@ -14,4 +22,4 @@ openssl rand -hex 32
 docker-compose up --build -d
 ```
 
-## Эндпоинты
+## Функциональность

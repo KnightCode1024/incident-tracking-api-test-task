@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from api.models import Incident
+
+
+@admin.register(Incident)
+class IncidentAdmin(admin.ModelAdmin):
+    pass
