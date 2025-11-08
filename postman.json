@@ -1,0 +1,212 @@
+{
+  "info": {
+    "name": "Incident Tracking API Test Task",
+    "description": "API-сервис для учёта инцидентов\n\n## Контакты\n- Telegram: https://t.me/ProstoKiReal\n\n## Технологии\n- Python, Postgres, Django DRF, Docker, Git\n\n## Перед началом:\n1. Запустите сервер: docker-compose up --build -d\n2. Убедитесь, что сервер работает на http://localhost:8000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Метаданные системы",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/incidents/metadata/",
+          "protocol": "http",
+          "host": ["{{base_url}}"],
+          "path": ["api", "incidents", "metadata", ""]
+        },
+        "description": "Получить список всех статусов и источников"
+      }
+    },
+    {
+      "name": "Создать инцидент",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"description\": \"Пример проблемы: не работает кнопка отправки формы\",\n    \"source_code\": \"operator\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/incidents/",
+          "protocol": "http",
+          "host": ["{{base_url}}"],
+          "path": ["api", "incidents", ""]
+        },
+        "description": "Создание нового инцидента. source_code: operator|monitoring|partner"
+      }
+    },
+    {
+      "name": "Получить все инциденты",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/incidents/",
+          "protocol": "http",
+          "host": ["{{base_url}}"],
+          "path": ["api", "incidents", ""]
+        },
+        "description": "Получить список всех инцидентов"
+      }
+    },
+    {
+      "name": "Получить инцидент по ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/incidents/1/",
+          "protocol": "http",
+          "host": ["{{base_url}}"],
+          "path": ["api", "incidents", "1", ""]
+        },
+        "description": "Получить конкретный инцидент по ID. Сначала создайте инцидент чтобы узнать его ID"
+      }
+    },
+    {
+      "name": "Обновить статус инцидента",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"status_code\": \"in_work\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/incidents/1/status/",
+          "protocol": "http",
+          "host": ["{{base_url}}"],
+          "path": ["api", "incidents", "1", "status", ""]
+        },
+        "description": "Обновление статуса инцидента. status_code: open|in_work|close\n\nПеред использованием замените ID '1' на актуальный ID инцидента"
+      }
+    },
+    {
+      "name": "Фильтрация инцидентов",
+      "item": [
+        {
+          "name": "По статусу",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/incidents/?status=open",
+              "protocol": "http",
+              "host": ["{{base_url}}"],
+              "path": ["api", "incidents", ""],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "open"
+                }
+              ]
+            },
+            "description": "Фильтрация инцидентов по статусу"
+          }
+        },
+        {
+          "name": "По источнику",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/incidents/?source=monitoring",
+              "protocol": "http",
+              "host": ["{{base_url}}"],
+              "path": ["api", "incidents", ""],
+              "query": [
+                {
+                  "key": "source",
+                  "value": "monitoring"
+                }
+              ]
+            },
+            "description": "Фильтрация инцидентов по источнику"
+          }
+        },
+        {
+          "name": "По статусу и источнику",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/incidents/?status=open&source=operator",
+              "protocol": "http",
+              "host": ["{{base_url}}"],
+              "path": ["api", "incidents", ""],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "open"
+                },
+                {
+                  "key": "source",
+                  "value": "operator"
+                }
+              ]
+            },
+            "description": "Фильтрация инцидентов по статусу и источнику"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "localhost:8000",
+      "type": "string",
+      "description": "Базовый URL API сервера"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "// Pre-request script: проверка что сервер запущен",
+          "console.log(\"Testing API at: \" + pm.variables.get(\"base_url\"));"
+        ],
+        "type": "text/javascript"
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "// Basic tests for API responses",
+          "pm.test(\"Status code is 200\", function () {",
+          "    pm.response.to.have.status(200);",
+          "});",
+          "",
+          "pm.test(\"Response time is acceptable\", function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+          "});"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ]
+}
